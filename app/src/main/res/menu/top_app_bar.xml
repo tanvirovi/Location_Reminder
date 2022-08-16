@@ -8,8 +8,8 @@
         android:title="@string/favorite"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/saved_location"
         android:contentDescription="@string/saved_location"
         android:title="@string/saved_location" />
-
 
 </menu>

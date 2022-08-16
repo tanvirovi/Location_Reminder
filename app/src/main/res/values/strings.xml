@@ -2,4 +2,7 @@
     <string name="app_name">Location Reminder</string>
     <string name="saved_location">Saved Location</string>
     <string name="favorite">favorite</string>
+    <string name="welcome_msg">Welcome to location reminder</string>
+    <string name="app_logo">App Logo</string>
+    <string name="login">Login</string>
 </resources>
