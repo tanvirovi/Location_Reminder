@@ -33,4 +33,7 @@
         <item name="android:windowBackground">@drawable/splash_image</item>
         <item name="android:statusBarColor">@color/md_theme_light_primary</item>
     </style>
+    <style name="LoginTheme" parent="FirebaseUI">
+        <item name="android:statusBarColor">@color/md_theme_light_primary</item>
+    </style>
 </resources>

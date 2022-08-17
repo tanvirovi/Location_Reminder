@@ -1,19 +1,41 @@
 package com.example.locationreminder.ui.welcome
 
+import android.app.Activity
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.example.locationreminder.R
 import com.example.locationreminder.databinding.FragmentWelcomeBinding
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
+import com.firebase.ui.auth.IdpResponse
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.google.firebase.auth.FirebaseAuth
+import timber.log.Timber
 
 class WelcomeFragment : Fragment() {
 
-    private val viewModel : WelcomeViewModel by viewModels()
+    companion object {
+        const val TAG = "LoginFragment"
+        const val SIGN_IN_RESULT_CODE = 1001
+    }
+
+    private val viewModel: WelcomeViewModel by viewModels()
     private lateinit var binding: FragmentWelcomeBinding
+
+    private val signInLauncher = registerForActivityResult(
+        FirebaseAuthUIActivityResultContract()
+    ) { res ->
+        this.onSignInResult(res)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,12 +47,66 @@ class WelcomeFragment : Fragment() {
             container, false
         )
         binding.lifecycleOwner = viewLifecycleOwner
-        
+        binding.button.setOnClickListener { launchSignInFlow() }
         return binding.root
+    }
+
+    private fun launchSignInFlow() {
+
+
+        val providers = arrayListOf(
+            AuthUI.IdpConfig.EmailBuilder().build(), AuthUI.IdpConfig.GoogleBuilder().build()
+        )
+
+        val signInIntent = AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(providers)
+            .setTheme(R.style.LoginTheme)
+            .build()
+        signInLauncher.launch(signInIntent)
+
+    }
+
+    private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
+        val response = result.idpResponse
+        if (result.resultCode == RESULT_OK) {
+            // Successfully signed in
+            val user = FirebaseAuth.getInstance().currentUser
+
+            Timber.i("Successfully signed in user ${FirebaseAuth.getInstance().currentUser?.displayName}!")
+        } else {
+            // Sign in failed. If response is null the user canceled the
+            // sign-in flow using the back button. Otherwise check
+            // response.getError().getErrorCode() and handle the error.
+            // ...
+            Timber.i("Sign in unsuccessful ${response?.error?.errorCode}")
+
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observeAuthenticationState()
 
+    }
+
+    private fun observeAuthenticationState() {
+        viewModel.authenticationState.observe(viewLifecycleOwner, Observer { authenticationState ->
+            when (authenticationState) {
+                WelcomeViewModel.AuthenticationState.AUTHENTICATED -> {
+
+                    binding.button.text = getString(R.string.logout_button_text)
+                    binding.button.setOnClickListener {
+                        AuthUI.getInstance().signOut(requireContext())
+                    }
+                }
+                else -> {
+                    binding.button.text = getString(R.string.login_button_text)
+                    binding.button.setOnClickListener {
+                        launchSignInFlow()
+                    }
+                }
+            }
+        })
     }
 }
