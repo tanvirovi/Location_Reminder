@@ -1,10 +1,11 @@
-package com.example.locationreminder.ui.welcome
+package com.example.locationreminder.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import com.example.locationreminder.utils.FirebaseUserLiveData
 
-class WelcomeViewModel : ViewModel() {
+class AuthViewModel : ViewModel() {
+
     enum class AuthenticationState {
         AUTHENTICATED, UNAUTHENTICATED, INVALID_AUTHENTICATION
     }
