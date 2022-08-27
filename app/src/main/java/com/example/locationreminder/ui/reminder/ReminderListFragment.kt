@@ -1,33 +1,29 @@
 package com.example.locationreminder.ui.reminder
 
-import android.app.ActionBar
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.locationreminder.R
-import com.example.locationreminder.databinding.FragmentAuthBinding
 import com.example.locationreminder.databinding.FragmentReminderListBinding
 import com.example.locationreminder.model.Reminder
-import com.example.locationreminder.ui.auth.AuthViewModel
 import com.firebase.ui.auth.AuthUI
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class ReminderListFragment : Fragment() {
 
-    private val viewModel: ReminderListViewModel by activityViewModels()
+    private val viewModel by viewModel<ReminderListViewModel>()
     private lateinit var binding: FragmentReminderListBinding
-    private var viewModelAdapter: ReminderListAdapter? = null
+    private lateinit var viewModelAdapter: ReminderListAdapter
 
-    private val reminder = listOf<Reminder>(Reminder(1, "test", "test", "test"))
+//    private val reminder = listOf<Reminder>(Reminder(1, "test", "test", "test"))
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,6 +67,10 @@ class ReminderListFragment : Fragment() {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
-        viewModelAdapter?.submitList(reminder)
+        viewModel.getAllReminders.observe(viewLifecycleOwner) {
+            it?.let {
+                viewModelAdapter.submitList(it)
+            }
+        }
     }
 }
