@@ -12,17 +12,52 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ReminderListViewModel(
-    private val repository : RemindersRepository
-): ViewModel() {
-
+    private val repository: RemindersRepository
+) : ViewModel() {
+    val tittle = MutableLiveData<String>()
+    val description = MutableLiveData<String>()
+    val location = MutableLiveData<String>()
     val getAllReminders = repository.reminder
 
-    init {
-        viewModelScope.launch {
-            repository.insertReminders(Reminders("wdwdw","wdwdw","dwdw"))
-        }
-        Timber.e(repository.getAllReminders().value.toString())
+    val reminders = MutableLiveData<Reminders>()
 
+    private val _statusOfAddFab = MutableLiveData<Boolean>()
+    val statusOfAddFab: LiveData<Boolean>
+        get() = _statusOfAddFab
+    private val _statusOfSaveFab = MutableLiveData<Boolean>()
+    val statusOfSaveFab: LiveData<Boolean>
+        get() = _statusOfAddFab
+
+    init {
+
+    }
+
+    private fun updateLocalDatabase(reminders: Reminders) {
+        viewModelScope.launch {
+            repository.insertReminders(
+                reminders
+            )
+        }
+    }
+
+    fun fabStatusChangeOnClicked() {
+        _statusOfAddFab.value = true
+    }
+    fun fabStatusChangeOnNavigated() {
+        _statusOfAddFab.value = false
+    }
+
+    fun saveFabStatusChangeOnClicked() {
+        reminders.value = Reminders(
+            tittle.value!!,
+            description.toString(),
+            "asdsad"
+        )
+        updateLocalDatabase(reminders.value!!)
+        _statusOfAddFab.value = true
+    }
+    fun saveFabStatusChangeOnNavigated() {
+        _statusOfAddFab.value = false
     }
 
 }

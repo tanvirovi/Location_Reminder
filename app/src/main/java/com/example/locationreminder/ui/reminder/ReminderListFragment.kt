@@ -35,7 +35,7 @@ class ReminderListFragment : Fragment() {
         )
         binding.lifecycleOwner = viewLifecycleOwner
         viewModelAdapter = ReminderListAdapter()
-
+        binding.viewModel = viewModel
         binding.locationRecycler.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = viewModelAdapter
@@ -72,5 +72,13 @@ class ReminderListFragment : Fragment() {
                 viewModelAdapter.submitList(it)
             }
         }
+
+        viewModel.statusOfAddFab.observe(viewLifecycleOwner, Observer {
+            if (it){
+                findNavController().navigate(ReminderListFragmentDirections.actionReminderListFragmentToReminderListAddItem())
+                Timber.e("clicked")
+                viewModel.fabStatusChangeOnNavigated()
+            }
+        })
     }
 }

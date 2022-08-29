@@ -25,5 +25,19 @@
             app:destination="@id/authFragment"
             app:popUpTo="@id/reminderListFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_reminderListFragment_to_reminderListAddItem"
+            app:destination="@id/reminderListAddItem" />
+    </fragment>
+    <fragment
+        android:id="@+id/reminderListAddItem"
+        android:name="com.example.locationreminder.ui.reminder.ReminderListAddItemFragment"
+        android:label="ReminderListAddItem"
+        tools:layout="@layout/fragment_reminder_list_add_item">
+        <action
+            android:id="@+id/action_reminderListAddItem_to_reminderListFragment2"
+            app:destination="@id/reminderListFragment"
+            app:popUpTo="@id/reminderListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>
