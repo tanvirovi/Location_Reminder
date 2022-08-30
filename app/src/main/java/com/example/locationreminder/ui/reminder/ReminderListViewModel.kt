@@ -8,30 +8,39 @@ import androidx.lifecycle.viewModelScope
 import com.example.locationreminder.database.Reminders
 import com.example.locationreminder.repository.RemindersRepository
 import com.example.locationreminder.repository.RemindersRepositoryImpl
+import com.example.locationreminder.utils.Event
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ReminderListViewModel(
     private val repository: RemindersRepository
 ) : ViewModel() {
+    // Variable used for two way dataBinding
     val tittle = MutableLiveData<String>()
     val description = MutableLiveData<String>()
     val location = MutableLiveData<String>()
+
+    // Getting all the reminders
     val getAllReminders = repository.reminder
+
+    // Declaring Event
+    private val _statusMessage = MutableLiveData<Event<String>>()
+    val statusMessage : LiveData<Event<String>>
+        get() = _statusMessage
 
     val reminders = MutableLiveData<Reminders>()
 
+    // For handling the navigation of add FAB
     private val _statusOfAddFab = MutableLiveData<Boolean>()
     val statusOfAddFab: LiveData<Boolean>
         get() = _statusOfAddFab
+
+    // For handling the navigation of save FAB
     private val _statusOfSaveFab = MutableLiveData<Boolean>()
     val statusOfSaveFab: LiveData<Boolean>
         get() = _statusOfAddFab
 
-    init {
-
-    }
-
+    // it will update room database
     private fun updateLocalDatabase(reminders: Reminders) {
         viewModelScope.launch {
             repository.insertReminders(
@@ -47,15 +56,26 @@ class ReminderListViewModel(
         _statusOfAddFab.value = false
     }
 
+    // save FAB function
     fun saveFabStatusChangeOnClicked() {
-        reminders.value = Reminders(
-            tittle.value!!,
-            description.toString(),
-            "asdsad"
-        )
-        updateLocalDatabase(reminders.value!!)
-        _statusOfAddFab.value = true
+        // adding validation check of the input field
+        if (tittle.value == null){
+            _statusMessage.value = Event("Please enter a Tittle")
+        } else if (description.value == null){
+            _statusMessage.value = Event("Please enter a Description")
+        } else if (location.value == null){
+            _statusMessage.value = Event("Please enter a Location")
+        } else {
+            reminders.value = Reminders(
+                tittle.value!!,
+                description.toString(),
+                "asdsad"
+            )
+            updateLocalDatabase(reminders.value!!)
+            _statusOfAddFab.value = true
+        }
     }
+
     fun saveFabStatusChangeOnNavigated() {
         _statusOfAddFab.value = false
     }
