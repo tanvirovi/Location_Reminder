@@ -11,6 +11,10 @@
     <string name="location">Location</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="description">Descrption</string>
+    <string name="description">Description</string>
     <string name="reminder_location">Reminder Location</string>
+    <string name="dropped_pin"> Dropped Pin</string>
+    <string name="permission_denied_explanation">"        You need to grant location permission in order to use this application "</string>
+    <string name="settings">Settings</string>
+    <string name="no_data">No Data</string>
 </resources>

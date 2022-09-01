@@ -63,8 +63,6 @@ class ReminderListViewModel(
             _statusMessage.value = Event("Please enter a Tittle")
         } else if (description.value == null){
             _statusMessage.value = Event("Please enter a Description")
-        } else if (location.value == null){
-            _statusMessage.value = Event("Please enter a Location")
         } else {
             reminders.value = Reminders(
                 tittle.value!!,

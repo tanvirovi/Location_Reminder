@@ -50,5 +50,8 @@ class ReminderListAddItemFragment : Fragment() {
             }
         })
 
+        binding.textView2.setOnClickListener{
+            findNavController().navigate(ReminderListAddItemFragmentDirections.actionReminderListAddItemToReminderMapsFragment())
+        }
     }
 }

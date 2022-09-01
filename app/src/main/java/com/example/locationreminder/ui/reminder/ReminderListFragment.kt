@@ -24,7 +24,6 @@ class ReminderListFragment : Fragment() {
     private lateinit var binding: FragmentReminderListBinding
     private lateinit var viewModelAdapter: ReminderListAdapter
 
-//    private val reminder = listOf<Reminder>(Reminder(1, "test", "test", "test"))
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,9 +67,23 @@ class ReminderListFragment : Fragment() {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
+
         viewModel.getAllReminders.observe(viewLifecycleOwner) {
+            binding.swipeRefreshLayout.isRefreshing = true
+
             it?.let {
-                viewModelAdapter.submitList(it)
+                if (it.isEmpty()){
+                    binding.swipeRefreshLayout.visibility = View.INVISIBLE
+                }else{
+                    binding.swipeRefreshLayout.visibility = View.VISIBLE
+                    binding.imageView2.visibility = View.INVISIBLE
+                    binding.textView4.visibility = View.INVISIBLE
+                    viewModelAdapter.submitList(it)
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }
             }
         }
 
@@ -81,5 +94,7 @@ class ReminderListFragment : Fragment() {
                 viewModel.fabStatusChangeOnNavigated()
             }
         })
+
     }
+
 }
