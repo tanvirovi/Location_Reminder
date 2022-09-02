@@ -25,7 +25,7 @@ class ReminderListViewModel(
 
     // Declaring Event
     private val _statusMessage = MutableLiveData<Event<String>>()
-    val statusMessage : LiveData<Event<String>>
+    val statusMessage: LiveData<Event<String>>
         get() = _statusMessage
 
     val reminders = MutableLiveData<Reminders>()
@@ -34,6 +34,10 @@ class ReminderListViewModel(
     private val _statusOfAddFab = MutableLiveData<Boolean>()
     val statusOfAddFab: LiveData<Boolean>
         get() = _statusOfAddFab
+
+    private var _refresh = MutableLiveData<Boolean>()
+    val refresh: LiveData<Boolean>
+        get() = _refresh
 
     // For handling the navigation of save FAB
     private val _statusOfSaveFab = MutableLiveData<Boolean>()
@@ -52,6 +56,7 @@ class ReminderListViewModel(
     fun fabStatusChangeOnClicked() {
         _statusOfAddFab.value = true
     }
+
     fun fabStatusChangeOnNavigated() {
         _statusOfAddFab.value = false
     }
@@ -59,9 +64,9 @@ class ReminderListViewModel(
     // save FAB function
     fun saveFabStatusChangeOnClicked() {
         // adding validation check of the input field
-        if (tittle.value == null){
+        if (tittle.value == null) {
             _statusMessage.value = Event("Please enter a Tittle")
-        } else if (description.value == null){
+        } else if (description.value == null) {
             _statusMessage.value = Event("Please enter a Description")
         } else {
             reminders.value = Reminders(

@@ -12,15 +12,15 @@ import timber.log.Timber
 
 class RemindersRepositoryImpl(
     private val dao: RemindersDAO
-): RemindersRepository{
+) : RemindersRepository {
 
-    override val reminder : LiveData<List<Reminder>> =
+    override val reminder: LiveData<List<Reminder>> =
         Transformations.map(dao.getAllRemindersById()) {
             it.asDatabaseDomainModel()
         }
 
     override suspend fun deleteReminders(reminders: Reminders) {
-       dao.deleteReminders(reminders)
+        dao.deleteReminders(reminders)
     }
 
     override suspend fun insertReminders(reminders: Reminders) {

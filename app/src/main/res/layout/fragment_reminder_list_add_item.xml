@@ -17,20 +17,20 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/outlinedTittleField"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="409dp"
             android:layout_height="wrap_content"
-            app:startIconDrawable="@drawable/ic_baseline_info_24"
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:startIconDrawable="@drawable/ic_baseline_info_24">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@={viewModel.tittle}"
-                android:hint="@string/tittle" />
+                android:hint="@string/tittle"
+                android:text="@={viewModel.tittle}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -48,8 +48,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@={viewModel.description}"
-                android:hint="@string/description" />
+                android:hint="@string/description"
+                android:text="@={viewModel.description}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -58,22 +58,22 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="5dp"
             android:text="@string/reminder_location"
             android:textSize="20sp"
-            android:clickable="true"
-            android:padding="5dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
             app:drawableStartCompat="@drawable/ic_baseline_edit_location_24"
-            android:focusable="true" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:textSize="20sp"
             android:text="@={viewModel.location}"
+            android:textSize="20sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/textView2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.507"
@@ -86,11 +86,11 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:clickable="true"
+            android:focusable="true"
             android:onClick="@{() -> viewModel.saveFabStatusChangeOnClicked()}"
             android:src="@drawable/ic_baseline_save_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:focusable="true" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

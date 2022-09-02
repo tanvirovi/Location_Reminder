@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.locationreminder.databinding.ReminderListItemBinding
 import com.example.locationreminder.model.Reminder
 
-class ReminderListAdapter : ListAdapter<Reminder, ReminderListAdapter.ViewHolder>(ReminderDiffCallback()) {
+class ReminderListAdapter :
+    ListAdapter<Reminder, ReminderListAdapter.ViewHolder>(ReminderDiffCallback()) {
 
     class ViewHolder private constructor(val viewDataBinding: ReminderListItemBinding) :
         RecyclerView.ViewHolder(viewDataBinding.root) {

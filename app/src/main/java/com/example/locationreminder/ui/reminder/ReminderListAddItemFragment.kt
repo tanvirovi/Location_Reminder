@@ -37,7 +37,7 @@ class ReminderListAddItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         viewModel.statusOfSaveFab.observe(viewLifecycleOwner, Observer {
-            if (it){
+            if (it) {
                 findNavController().navigate(ReminderListAddItemFragmentDirections.actionReminderListAddItemToReminderListFragment2())
                 viewModel.saveFabStatusChangeOnNavigated()
             }
@@ -50,7 +50,7 @@ class ReminderListAddItemFragment : Fragment() {
             }
         })
 
-        binding.textView2.setOnClickListener{
+        binding.textView2.setOnClickListener {
             findNavController().navigate(ReminderListAddItemFragmentDirections.actionReminderListAddItemToReminderMapsFragment())
         }
     }

@@ -58,6 +58,7 @@ class ReminderMapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         mapFragment?.getMapAsync(callback)
 
     }
+
     @RequiresApi(Build.VERSION_CODES.Q)
     private val callback = OnMapReadyCallback { googleMap ->
         /**
@@ -117,7 +118,7 @@ class ReminderMapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults, this)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
     private fun setMapMarkerOnLongClick(map: GoogleMap) {

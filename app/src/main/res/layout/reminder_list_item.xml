@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="reminder"
             type="com.example.locationreminder.model.Reminder" />
@@ -12,10 +13,10 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="5dp"
         android:layout_marginStart="5dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
         app:cardCornerRadius="@dimen/card_corners"
         app:cardElevation="5dp">
 
@@ -35,7 +36,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.483"
-                tools:text="@string/tittle"/>
+                tools:text="@string/tittle" />
 
             <TextView
                 android:id="@+id/location"
@@ -49,7 +50,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.945"
                 app:layout_constraintStart_toEndOf="@+id/tittle"
-                tools:text="@string/location"/>
+                tools:text="@string/location" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 

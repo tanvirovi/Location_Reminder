@@ -55,46 +55,32 @@ class ReminderListFragment : Fragment() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when(menuItem.itemId) {
+                return when (menuItem.itemId) {
                     R.id.favorite -> {
                         AuthUI.getInstance().signOut(requireContext())
                         findNavController().navigate(ReminderListFragmentDirections.actionReminderListFragmentToAuthFragment())
                         true
-                    }else -> {
+                    }
+                    else -> {
                         false
                     }
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            binding.swipeRefreshLayout.isRefreshing = false
-        }
-
         viewModel.getAllReminders.observe(viewLifecycleOwner) {
-            binding.swipeRefreshLayout.isRefreshing = true
-
             it?.let {
-                if (it.isEmpty()){
-                    binding.swipeRefreshLayout.visibility = View.INVISIBLE
-                }else{
-                    binding.swipeRefreshLayout.visibility = View.VISIBLE
-                    binding.imageView2.visibility = View.INVISIBLE
-                    binding.textView4.visibility = View.INVISIBLE
-                    viewModelAdapter.submitList(it)
-                    binding.swipeRefreshLayout.isRefreshing = false
-                }
+                viewModelAdapter.submitList(it)
             }
         }
 
         viewModel.statusOfAddFab.observe(viewLifecycleOwner, Observer {
-            if (it){
+            if (it) {
                 findNavController().navigate(ReminderListFragmentDirections.actionReminderListFragmentToReminderListAddItem())
                 Timber.e("clicked")
                 viewModel.fabStatusChangeOnNavigated()
             }
         })
-
     }
 
 }
