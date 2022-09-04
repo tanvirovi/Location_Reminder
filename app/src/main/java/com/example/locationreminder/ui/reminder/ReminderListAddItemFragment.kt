@@ -11,11 +11,12 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.locationreminder.R
 import com.example.locationreminder.databinding.FragmentReminderListAddItemBinding
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ReminderListAddItemFragment : Fragment() {
 
-    private val viewModel by viewModel<ReminderListViewModel>()
+    private val viewModel by sharedViewModel<ReminderListViewModel>()
     private lateinit var binding: FragmentReminderListAddItemBinding
 
     override fun onCreateView(
@@ -36,21 +37,8 @@ class ReminderListAddItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        viewModel.statusOfSaveFab.observe(viewLifecycleOwner, Observer {
-            if (it) {
-                findNavController().navigate(ReminderListAddItemFragmentDirections.actionReminderListAddItemToReminderListFragment2())
-                viewModel.saveFabStatusChangeOnNavigated()
-            }
-        })
 
-        viewModel.statusMessage.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let { message ->
-                print(message)
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            }
-        })
-
-        binding.textView2.setOnClickListener {
+        binding.floatingActionButton.setOnClickListener {
             findNavController().navigate(ReminderListAddItemFragmentDirections.actionReminderListAddItemToReminderMapsFragment())
         }
     }

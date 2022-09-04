@@ -16,9 +16,9 @@ class ReminderListViewModel(
     private val repository: RemindersRepository
 ) : ViewModel() {
     // Variable used for two way dataBinding
-    val tittle = MutableLiveData<String>()
-    val description = MutableLiveData<String>()
-    val location = MutableLiveData<String>()
+    val tittle = MutableLiveData<String?>()
+    val description = MutableLiveData<String?>()
+    val location = MutableLiveData<String?>()
 
     // Getting all the reminders
     val getAllReminders = repository.reminder
@@ -40,9 +40,13 @@ class ReminderListViewModel(
         get() = _refresh
 
     // For handling the navigation of save FAB
-    private val _statusOfSaveFab = MutableLiveData<Boolean>()
-    val statusOfSaveFab: LiveData<Boolean>
-        get() = _statusOfAddFab
+    private val _statusOfSaveButton = MutableLiveData<Boolean>()
+    val statusOfSaveButton: LiveData<Boolean>
+        get() = _statusOfSaveButton
+
+    init {
+        _refresh.value = false
+    }
 
     // it will update room database
     private fun updateLocalDatabase(reminders: Reminders) {
@@ -62,25 +66,43 @@ class ReminderListViewModel(
     }
 
     // save FAB function
-    fun saveFabStatusChangeOnClicked() {
+    fun saveButtonStatusChangeOnClicked() {
         // adding validation check of the input field
+        Log.e("hare", "re")
         if (tittle.value == null) {
             _statusMessage.value = Event("Please enter a Tittle")
         } else if (description.value == null) {
             _statusMessage.value = Event("Please enter a Description")
+        } else if (location.value == null) {
+            _statusMessage.value = Event("Please select a Location of Interest")
         } else {
             reminders.value = Reminders(
                 tittle.value!!,
                 description.toString(),
-                "asdsad"
+                location.value.toString()
             )
             updateLocalDatabase(reminders.value!!)
-            _statusOfAddFab.value = true
+            _statusOfSaveButton.value = true
+            resetData()
         }
     }
 
-    fun saveFabStatusChangeOnNavigated() {
-        _statusOfAddFab.value = false
+    private fun resetData() {
+        tittle.value = null
+        description.value = null
+        location.value = null
+    }
+
+    fun saveButtonStatusChangeOnNavigated() {
+        _statusOfSaveButton.value = false
+    }
+
+    fun onSwipe() {
+        _refresh.value = true
+    }
+
+    fun onSwipeEnd() {
+        _refresh.value = false
     }
 
 }

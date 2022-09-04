@@ -9,9 +9,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.locationreminder.R
 import com.example.locationreminder.databinding.FragmentReminderMapsBinding
 import com.example.locationreminder.utils.Constants.REQUEST_CODE_LOCATION_PERMISSION
@@ -23,6 +27,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 import timber.log.Timber
@@ -35,7 +41,7 @@ class ReminderMapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private lateinit var binding: FragmentReminderMapsBinding
     private lateinit var map: GoogleMap
-
+    private val viewModel by sharedViewModel<ReminderListViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,6 +54,9 @@ class ReminderMapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             container,
             false
         )
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
+
         return binding.root
     }
 
@@ -56,6 +65,20 @@ class ReminderMapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+
+        viewModel.statusMessage.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it.getContentIfNotHandled()?.let { message ->
+                print(message)
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        viewModel.statusOfSaveButton.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigate(ReminderMapsFragmentDirections.actionReminderMapsFragmentToReminderListFragment2())
+                viewModel.saveButtonStatusChangeOnNavigated()
+            }
+        }
 
     }
 
@@ -147,8 +170,10 @@ class ReminderMapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                     .position(poi.latLng)
                     .title(poi.name)
             )
+            if (poiMarker != null) {
+                viewModel.location.value = poiMarker.title
+            }
         }
-
     }
 
     private fun setMapStyle(map: GoogleMap) {

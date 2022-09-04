@@ -35,11 +35,6 @@
         android:label="ReminderListAddItem"
         tools:layout="@layout/fragment_reminder_list_add_item">
         <action
-            android:id="@+id/action_reminderListAddItem_to_reminderListFragment2"
-            app:destination="@id/reminderListFragment"
-            app:popUpTo="@id/reminderListFragment"
-            app:popUpToInclusive="true" />
-        <action
             android:id="@+id/action_reminderListAddItem_to_reminderMapsFragment"
             app:destination="@id/reminderMapsFragment" />
     </fragment>
@@ -47,5 +42,9 @@
         android:id="@+id/reminderMapsFragment"
         android:name="com.example.locationreminder.ui.reminder.ReminderMapsFragment"
         android:label="fragment_reminder_maps"
-        tools:layout="@layout/fragment_reminder_maps" />
+        tools:layout="@layout/fragment_reminder_maps" >
+        <action
+            android:id="@+id/action_reminderMapsFragment_to_reminderListFragment2"
+            app:destination="@id/reminderListFragment" />
+    </fragment>
 </navigation>

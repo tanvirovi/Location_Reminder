@@ -1,8 +1,9 @@
 package com.example.locationreminder.ui.reminder
 
+import android.app.PendingIntent
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
@@ -13,17 +14,29 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.locationreminder.R
 import com.example.locationreminder.databinding.FragmentReminderListBinding
-import com.example.locationreminder.model.Reminder
+import com.example.locationreminder.utils.GeoFenceBroadcastReceiver
 import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.location.Geofence
+import com.google.android.gms.location.GeofencingClient
+import com.google.android.gms.location.LocationServices
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class ReminderListFragment : Fragment() {
 
-    private val viewModel by viewModel<ReminderListViewModel>()
+    private val viewModel by sharedViewModel<ReminderListViewModel>()
     private lateinit var binding: FragmentReminderListBinding
     private lateinit var viewModelAdapter: ReminderListAdapter
+    lateinit var geofencingClient: GeofencingClient
 
+    private val geofencePendingIntent: PendingIntent by lazy {
+        val intent = Intent(requireContext(), GeoFenceBroadcastReceiver::class.java)
+//        intent.action = ACTION_GEOFENCE_EVENT
+        // Use FLAG_UPDATE_CURRENT so that you get the same pending intent back when calling
+        // addGeofences() and removeGeofences().
+        PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +53,7 @@ class ReminderListFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = viewModelAdapter
         }
+        geofencingClient = LocationServices.getGeofencingClient(requireContext())
 
         return binding.root
     }
@@ -71,6 +85,7 @@ class ReminderListFragment : Fragment() {
         viewModel.getAllReminders.observe(viewLifecycleOwner) {
             it?.let {
                 viewModelAdapter.submitList(it)
+                viewModel.onSwipeEnd()
             }
         }
 

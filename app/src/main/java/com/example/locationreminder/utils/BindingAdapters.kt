@@ -22,6 +22,7 @@ fun setFadeVisible(view: View, items: LiveData<List<Reminder>>?) {
 @BindingAdapter("setRefresh")
 fun setRefresh(swipeRefreshLayout: SwipeRefreshLayout, refresh: LiveData<Boolean>) {
     swipeRefreshLayout.setOnRefreshListener {
+        Log.e("refresh", refresh.value.toString())
         swipeRefreshLayout.isRefreshing = refresh.value!!
     }
 }
