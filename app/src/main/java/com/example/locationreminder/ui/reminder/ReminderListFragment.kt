@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.locationreminder.R
@@ -19,6 +20,9 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialElevationScale
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -30,6 +34,7 @@ class ReminderListFragment : Fragment() {
     private lateinit var viewModelAdapter: ReminderListAdapter
     lateinit var geofencingClient: GeofencingClient
 
+    private val directions = ReminderListFragmentDirections.actionReminderListFragmentToReminderMapsFragment()
     private val geofencePendingIntent: PendingIntent by lazy {
         val intent = Intent(requireContext(), GeoFenceBroadcastReceiver::class.java)
 //        intent.action = ACTION_GEOFENCE_EVENT
@@ -91,9 +96,17 @@ class ReminderListFragment : Fragment() {
 
         viewModel.statusOfAddFab.observe(viewLifecycleOwner, Observer {
             if (it) {
-                findNavController().navigate(ReminderListFragmentDirections.actionReminderListFragmentToReminderListAddItem())
+                val transitionName by lazy { getString(R.string.fab_transition) }
+                val extra = FragmentNavigatorExtras(binding.floatingActionButton2 to transitionName)
+                findNavController().navigate(directions, extra)
                 Timber.e("clicked")
-                viewModel.fabStatusChangeOnNavigated()
+                exitTransition = MaterialElevationScale(false).apply {
+                    duration = 500
+                }
+                reenterTransition = MaterialElevationScale(true).apply {
+                    duration = 500
+                }
+                viewModel.addFabStatusChangeOnNavigated()
             }
         })
     }

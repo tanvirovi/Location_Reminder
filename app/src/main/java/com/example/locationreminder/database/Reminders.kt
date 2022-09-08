@@ -8,7 +8,9 @@ import com.example.locationreminder.model.Reminder
 data class Reminders(
     var tittle: String,
     var description: String,
-    var selectedLocation: String
+    var selectedLocation: String,
+    var lat: Double?,
+    var lng: Double?
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null
@@ -21,7 +23,9 @@ fun List<Reminders>.asDatabaseDomainModel(): List<Reminder> {
             id = it.id,
             tittle = it.tittle,
             description = it.description,
-            selectedLocation = it.selectedLocation
+            selectedLocation = it.selectedLocation,
+            lat = it.lat,
+            lng = it.lng
         )
     }
 }

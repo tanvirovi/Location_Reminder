@@ -3,6 +3,7 @@ package com.example.locationreminder.ui.reminder
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.transition.MaterialContainerTransform
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -43,6 +45,7 @@ class ReminderMapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var map: GoogleMap
     private val viewModel by sharedViewModel<ReminderListViewModel>()
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,6 +59,13 @@ class ReminderMapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         )
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+//            drawingViewId = R.id.my_nav_host_fragment
+            duration = 500
+            scrimColor = Color.TRANSPARENT
+            setAllContainerColors(requireContext().getColor(R.color.md_theme_light_inverseOnSurface))
+        }
 
         return binding.root
     }
@@ -75,11 +85,10 @@ class ReminderMapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         viewModel.statusOfSaveButton.observe(viewLifecycleOwner) {
             if (it) {
-                findNavController().navigate(ReminderMapsFragmentDirections.actionReminderMapsFragmentToReminderListFragment2())
+                findNavController().navigate(ReminderMapsFragmentDirections.actionReminderMapsFragmentToReminderListAddItem())
                 viewModel.saveButtonStatusChangeOnNavigated()
             }
         }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -101,7 +110,6 @@ class ReminderMapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
         googleMap.addMarker(MarkerOptions().position(homeLatLng))
         googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-        setMapMarkerOnLongClick(googleMap)
         setPoiClick(googleMap)
         setMapStyle(googleMap)
         requestPermission()
@@ -142,24 +150,6 @@ class ReminderMapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         grantResults: IntArray
     ) {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
-    }
-
-    private fun setMapMarkerOnLongClick(map: GoogleMap) {
-        map.setOnMapLongClickListener { latLng ->
-
-            val snippet = String.format(
-                Locale.getDefault(),
-                "Lat: %1$.5f, Long: %2$.5f",
-                latLng.latitude,
-                latLng.longitude
-            )
-            map.addMarker(
-                MarkerOptions()
-                    .position(latLng)
-                    .title(getString(R.string.dropped_pin))
-                    .snippet(snippet)
-            )
-        }
     }
 
     private fun setPoiClick(map: GoogleMap) {
@@ -204,6 +194,4 @@ class ReminderMapsFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             requestPermission()
         }
     }
-
-
 }

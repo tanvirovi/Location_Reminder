@@ -60,6 +60,7 @@ class AuthFragment : Fragment() {
             .setAvailableProviders(providers)
             .setTheme(R.style.LoginTheme)
             .build()
+
         signInLauncher.launch(signInIntent)
 
     }

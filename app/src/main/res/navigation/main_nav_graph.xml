@@ -26,8 +26,8 @@
             app:popUpTo="@id/reminderListFragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_reminderListFragment_to_reminderListAddItem"
-            app:destination="@id/reminderListAddItem" />
+            android:id="@+id/action_reminderListFragment_to_reminderMapsFragment"
+            app:destination="@id/reminderMapsFragment" />
     </fragment>
     <fragment
         android:id="@+id/reminderListAddItem"
@@ -35,8 +35,10 @@
         android:label="ReminderListAddItem"
         tools:layout="@layout/fragment_reminder_list_add_item">
         <action
-            android:id="@+id/action_reminderListAddItem_to_reminderMapsFragment"
-            app:destination="@id/reminderMapsFragment" />
+            android:id="@+id/action_reminderListAddItem_to_reminderListFragment"
+            app:destination="@id/reminderListFragment"
+            app:popUpTo="@id/reminderListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/reminderMapsFragment"
@@ -44,7 +46,7 @@
         android:label="fragment_reminder_maps"
         tools:layout="@layout/fragment_reminder_maps" >
         <action
-            android:id="@+id/action_reminderMapsFragment_to_reminderListFragment2"
-            app:destination="@id/reminderListFragment" />
+            android:id="@+id/action_reminderMapsFragment_to_reminderListAddItem"
+            app:destination="@id/reminderListAddItem" />
     </fragment>
 </navigation>

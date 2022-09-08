@@ -63,8 +63,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
+            android:transitionName="@string/fab_transition"
             android:layout_marginBottom="16dp"
-            android:onClick="@{() -> viewModel.fabStatusChangeOnClicked()}"
+            android:onClick="@{() -> viewModel.addFabStatusChangeOnClicked()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_baseline_add_24" />

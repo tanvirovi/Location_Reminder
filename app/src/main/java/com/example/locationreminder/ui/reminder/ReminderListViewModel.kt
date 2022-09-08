@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.locationreminder.database.Reminders
+import com.example.locationreminder.repository.GeoFenceRepository
 import com.example.locationreminder.repository.RemindersRepository
 import com.example.locationreminder.repository.RemindersRepositoryImpl
 import com.example.locationreminder.utils.Event
@@ -13,7 +14,8 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ReminderListViewModel(
-    private val repository: RemindersRepository
+    private val repository: RemindersRepository,
+    private val geoRepo: GeoFenceRepository
 ) : ViewModel() {
     // Variable used for two way dataBinding
     val tittle = MutableLiveData<String?>()
@@ -31,6 +33,10 @@ class ReminderListViewModel(
     val reminders = MutableLiveData<Reminders>()
 
     // For handling the navigation of add FAB
+    private val _statusOfSaveFab = MutableLiveData<Boolean>()
+    val statusOfSaveFab: LiveData<Boolean>
+        get() = _statusOfSaveFab
+
     private val _statusOfAddFab = MutableLiveData<Boolean>()
     val statusOfAddFab: LiveData<Boolean>
         get() = _statusOfAddFab
@@ -57,16 +63,16 @@ class ReminderListViewModel(
         }
     }
 
-    fun fabStatusChangeOnClicked() {
-        _statusOfAddFab.value = true
+    fun saveButtonStatusChangeOnClicked() {
+        _statusOfSaveButton.value = true
     }
 
-    fun fabStatusChangeOnNavigated() {
-        _statusOfAddFab.value = false
+    fun saveButtonStatusChangeOnNavigated() {
+        _statusOfSaveButton.value = false
     }
 
     // save FAB function
-    fun saveButtonStatusChangeOnClicked() {
+    fun fabStatusChangeOnClicked() {
         // adding validation check of the input field
         Log.e("hare", "re")
         if (tittle.value == null) {
@@ -79,10 +85,13 @@ class ReminderListViewModel(
             reminders.value = Reminders(
                 tittle.value!!,
                 description.toString(),
-                location.value.toString()
+                location.value.toString(),
+                0.0,
+                0.0
             )
             updateLocalDatabase(reminders.value!!)
-            _statusOfSaveButton.value = true
+            geoRepo.add(reminders.value!!)
+            _statusOfSaveFab.value = true
             resetData()
         }
     }
@@ -93,8 +102,16 @@ class ReminderListViewModel(
         location.value = null
     }
 
-    fun saveButtonStatusChangeOnNavigated() {
-        _statusOfSaveButton.value = false
+    fun fabStatusChangeOnNavigated() {
+        _statusOfSaveFab.value = false
+    }
+
+    fun addFabStatusChangeOnClicked() {
+        _statusOfAddFab.value = true
+    }
+
+    fun addFabStatusChangeOnNavigated() {
+        _statusOfAddFab.value = false
     }
 
     fun onSwipe() {
